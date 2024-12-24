@@ -190,11 +190,9 @@ app.post('/hf/v1/chat/completions', async (req, res) => {
   let usedChecksum;
   
   try {
-    // o1开头的模型，不支持流式输出
-    if (req.body.model.startsWith('o1-') && req.body.stream) {
-      return res.status(400).json({
-        error: 'Model not supported stream',
-      });
+    // o1开头的模型强制使用非流式输出
+    if (req.body.model.startsWith('o1-')) {
+      req.body.stream = false;
     }
 
     let currentKeyIndex = 0;
